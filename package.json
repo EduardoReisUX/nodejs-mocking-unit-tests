@@ -7,12 +7,14 @@
   "scripts": {
     "start": "node src/index.js",
     "test": "node --test",
-    "test:dev": "node --test --watch"
+    "test:dev": "node --test --watch",
+    "test:cov": "npx c8 --100 --all --exclude src/index.js --exclude test/ node --test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "c8": "^8.0.1",
     "lokijs": "^1.5.12",
     "sinon": "^15.2.0"
   }
