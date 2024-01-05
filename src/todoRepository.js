@@ -1,25 +1,31 @@
+/** @typedef {import("./todo.js").default} Todo */
+/** @typedef {{ list(): string, create(data: Todo): string }} ITodoRepository */
 
 export default class TodoRepository {
-    #schedule
-    constructor({ db }) {
-        this.#schedule = db.addCollection('schedule')
-    }
+  /**
+   * @type {import("lokijs").Collection<Todo>}
+   */
+  #schedule;
 
-    async list() {
-        // deveria ser um .project() mas não temos no lokijs
-        return this.#schedule.find().map(({ meta, $loki, ...result }) => result)
-    }
+  /**
+   * @param {{ db: import("lokijs") }}
+   */
+  constructor({ db }) {
+    this.#schedule = db.addCollection("schedule");
+  }
 
-    async create(data) {
-        return this.#schedule.insertOne(data)
-    }
+  /**
+   * @returns {Promise<Todo[]>}
+   */
+  async list() {
+    return this.#schedule.find().map(({ meta, $loki, ...result }) => result);
+  }
+
+  /**
+   * @param {Todo} data
+   * @returns {Promise<Todo>}
+   */
+  async create(data) {
+    return this.#schedule.insertOne(data);
+  }
 }
-
-
-
-// const c = new TodoRepository()
-
-// c.create({ name: 'XuxaDaSilva', age: 90})
-// c.create({ name: 'Joaozinho', age: 90})
-
-// console.log('list', c.list())

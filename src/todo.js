@@ -1,18 +1,31 @@
-import crypto from 'node:crypto'
+import crypto from "node:crypto";
 
 export default class Todo {
-    constructor({ text, when }) {
-        this.text = text
-        this.when = when
+  /**
+   * @param {{ text: string, when: Date }}
+   */
+  constructor({ text, when }) {
+    /**
+     * @type {string}
+     */
+    this.text = text;
+    /**
+     * @type {Date}
+     */
+    this.when = when;
 
-        this.status = ''
-        this.id = crypto.randomUUID()
-    }
+    /**
+     * @type {string}
+     */
+    this.status = "";
 
-    isValid() {
-        //  - !!
-        return !!this.text && !isNaN(this.when.valueOf())
-    }
+    /**
+     * @type {string}
+     */
+    this.id = crypto.randomUUID();
+  }
 
+  isValid() {
+    return !!this.text && !isNaN(this.when.valueOf());
+  }
 }
-

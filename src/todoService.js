@@ -1,32 +1,49 @@
+/** @typedef {import("./todo.js").default} Todo */
+/** @typedef {import("./todoRepository.js").default} TodoRepository */
+
 export default class TodoService {
-    #todoRepository
+  /**
+   * @type {TodoRepository}
+   */
+  #todoRepository;
 
-    constructor({ todoRepository }) {
-        this.#todoRepository = todoRepository
+  /**
+   * @param {{ todoRepository: TodoRepository }}
+   */
+  constructor({ todoRepository }) {
+    this.#todoRepository = todoRepository;
+  }
+
+  /**
+   * @param {Todo} todoItem
+   */
+  create(todoItem) {
+    if (!todoItem.isValid()) {
+      return {
+        error: {
+          message: "invalid data",
+          data: todoItem,
+        },
+      };
     }
 
-    create(todoItem) {
-        if (!todoItem.isValid()) {
-            return {
-                error: {
-                    message: 'invalid data',
-                    data: todoItem
-                }
-            }
-        }
+    const { when } = todoItem;
+    const today = new Date();
+    const todo = {
+      ...todoItem,
+      status: when > today ? "pending" : "late",
+    };
 
-        const { when } = todoItem
-        const today = new Date()
-        const todo = {
-            ...todoItem,
-            status: when > today ? 'pending' : 'late'
-        }
+    return this.#todoRepository.create(todo);
+  }
 
-        return this.#todoRepository.create(todo)
-    }
-
-    async list(query) {
-        return (await this.#todoRepository.list())
-            .map(({ text, ...result }) => ({ text: text.toUpperCase(), ...result }))
-    }
+  /**
+   * @return {Promise<Todo[]>}
+   */
+  async list() {
+    return (await this.#todoRepository.list()).map(({ text, ...result }) => ({
+      text: text.toUpperCase(),
+      ...result,
+    }));
+  }
 }
