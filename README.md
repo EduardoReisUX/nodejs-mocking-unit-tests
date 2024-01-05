@@ -21,7 +21,7 @@ Para rodar os testes automatizados: `npm test` ou `npm test:dev`
 
 ## Aprendizados
 
-Algumas coisas que aprendi durante o projeto.
+Alguns truques que aprendi durante o projeto...
 
 ### node crypto
 
@@ -43,7 +43,7 @@ after(async () => {
 });
 ```
 
-Mas é mais fácil substituir o pacote por outro de terceiros.
+Mas é mais fácil substituir o pacote por outros de terceiros.
 
 ### deepStrictEqual - comparação com tipos de dados
 
@@ -80,6 +80,29 @@ Sinon é uma biblioteca de testes dedicado em spies, stubs e mocks que contém *
 
 O comando `node --experimental-test-coverage --test` faz o test coverage do projeto. Porém, é recomendado instalar pacotes de terceiros por ser uma funcionalidade experimental do node, como o `c8@8.0.1`.
 
+### Dependency inversion
+
+A técnica dependency inversion permite o desacoplar componentes um do outro.
+
+Ao invés do service ou controller depender diretamente das **implementações** do repository, o que é algo ruim num ambiente de testes pois é necessário subir o banco de dados para testar:
+
+```mermaid
+flowchart BT
+  A[TodoService] --> B[TodoRepo]
+```
+
+Fazemos com que tanto o service quanto o repository dependam da **interface** do repositório: 
+
+```mermaid
+flowchart BT
+  A[TodoService] --> B{{InterfaceTodoRepo}} 
+  C[TodoRepo] --> B
+```
+
+Os principais ganhos são a testabilidade, pois não depende de subir um banco de dados para os testes, desacoplamento, substituibilidade (Liskov Substitution Principle), flexibilidade (Open Closed Principle) e inversão de controle (Dependency Inversion Principle).
+
+![Dependency inversion](github/dependency-inversion.png)
+
 ## Fontes
 
 - [Como Fazer Testes unitários em serviços - Bancos de Dados, Web APIs e mais || Erick Wendel](https://www.youtube.com/watch?v=iDaBo7ge604)
@@ -87,3 +110,4 @@ O comando `node --experimental-test-coverage --test` faz o test coverage do proj
 - [Node.js v21.5.0 documentation - Coverage reporters](https://nodejs.org/api/test.html#coverage-reporters)
 - [Fake timers - Sinon.JS](https://sinonjs.org/releases/v17/fake-timers/)
 - [Sandboxes - Sinon.JS](https://sinonjs.org/releases/v17/sandbox/)
+- [Dependency Injection & Inversion Explained | Node.js w/ TypeScript](https://khalilstemmler.com/articles/tutorials/dependency-injection-inversion-explained/)
